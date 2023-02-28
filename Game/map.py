@@ -1,4 +1,5 @@
 import pygame
+from Game.vector import V2D
 
 
 class Map:
@@ -15,8 +16,8 @@ class Map:
         self._grid = Map.get_grid()
 
     def __getitem__(self, pos) -> str: # char
-        if type(pos) != tuple or len(pos) != 2:
-            raise IndexError('Index must be a tuple of length 2')
+        if type(pos) != V2D:
+            raise IndexError('Index must be a vector')
 
         x, y = pos
         index = y * Map.Width + x
@@ -24,8 +25,8 @@ class Map:
         return self._grid[index]
 
     def __setitem__(self, pos, value):
-        if type(pos) != tuple or len(pos) != 2:
-            raise IndexError('Index must be a tuple of length 2')
+        if type(pos) != V2D:
+            raise IndexError('Index must be a vector')
 
         x, y = pos
         index = y * Map.Width + x
@@ -35,7 +36,9 @@ class Map:
     def draw(self, square: str, draw_fn):
         for x in range(0, Map.Width):
             for y in range(0, Map.Height):
-                if self[x, y] == square:
+                
+                index = y * Map.Width + x
+                if self._grid[index] == square:
                     draw_fn(x, y)
 
 

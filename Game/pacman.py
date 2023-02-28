@@ -1,43 +1,48 @@
 import pygame
 from Game.map import Map
+from Game.vector import V2D
 
 YELLOW = (250, 253, 15)
 
 
 class PacMan:
 
-    def __init__(self, x, y, map: Map) -> None:
-        self.px, self.py = x, y   # Position
-        self.dx, self.dy = 1, 0   # Directrion
-        self.ndx, self.ndy = 1, 0 # Next direction
+    def __init__(self, position: V2D, map: Map) -> None:
+        self.pos = position   # Position
+        self.dir = V2D(1, 0)  # Directrion
+        self.ndir = V2D(1, 0) # Next direction
 
         self._points = 0
         self._map = map
 
+        self._die = False
+
     def turn(self, x, y):
-        if self._map[self.px + x, self.py + y] == Map.Wall:
-            self.ndx = x; self.ndy = y
+        direction = V2D(x, y)
+        if self._map[self.pos + direction] == Map.Wall:
+            self.ndir = direction
         else:
-            self.dx = x; self.dy = y
-            self.ndx = x; self.ndy = y
+            self.dir = direction
+            self.ndir = direction
 
     def move(self):
-        x, y = self.px + self.dx, self.py + self.dy 
-        square = self._map[x, y]
+        next_pos = self.pos + self.dir
+        next_pos.x %= Map.Width
+        square = self._map[next_pos]
         
         if square == Map.Wall:
             return
 
         if square == Map.Point:
-            self._map[x, y] = ' '
+            self._map[next_pos] = ' '
             self._points += (square == Map.Point)
 
-        self.px = x; self.py = y
+        self.pos = next_pos
         
     def draw(self, screen: pygame.Surface, s: int):
-        pygame.draw.rect(screen, YELLOW, (self.px * s, self.py * s, s, s))
+        pygame.draw.rect(screen, YELLOW, (self.pos.x * s, self.pos.y * s, s, s))
 
     def check_dir(self):
-        if self._map[self.px + self.ndx, self.py + self.ndy] != Map.Wall:
-            self.dx = self.ndx; self.dy = self.ndy
+        if self._map[self.pos + self.ndir] != Map.Wall:
+            self.dir = self.ndir
 
