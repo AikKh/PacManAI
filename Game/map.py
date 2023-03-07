@@ -11,9 +11,14 @@ class Map:
     Point = '.'
     Wall = '#'
 
+    _grid = None
 
-    def __init__(self) -> None:
-        self._grid = Map.get_grid()
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Map, cls).__new__(cls)
+            cls.instance._grid = Map.get_grid()
+        return cls.instance
+
 
     def __getitem__(self, pos) -> str: # char
         if type(pos) != V2D:

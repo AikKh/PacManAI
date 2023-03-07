@@ -18,4 +18,10 @@ class V2D:
         yield self.x
         yield self.y
     
+    def __eq__(self, __o: object) -> bool:
+        if type(__o) is V2D:
+            return self.x == __o.x and self.y == __o.y
+        return False
 
+    def __str__(self) -> str:
+        return f"({self.x}, {self.y})"

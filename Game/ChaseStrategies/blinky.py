@@ -1,39 +1,23 @@
-from Game.ChaseStrategies.strategy import Map, PacMan, ChaseStrategy, V2D
+from Game.ChaseStrategies.strategy import ChaseStrategy, V2D
 
 
 class Blinky(ChaseStrategy):
 
-    def __init__(self, map: Map, pacman: PacMan) -> None:
-        super().__init__(map, pacman)
+    def __init__(self, max_dist: int) -> None:
+        super().__init__(max_dist)
+        self._path = iter([])
 
-    def chase(self, pos: V2D):
-        pass
-        # dx = self._pacman.px - x 
-        # dy = self._pacman.py - y
-
-        # # distx = abs(dx)
-        # # disty = abs(dy)
+    def chase(self, start: V2D, end: V2D):
+        if self._n < 1:
+            self.update_path(start, end)
+        self._n -= 1
         
-        # dirx = 1 if dx > 0 else -1
-        # diry = 1 if dy > 0 else -1
+        return next(self._path)
+    
 
-
-        # next_x = x + dirx
-        # next_y = y + diry
-
-
-        # square_x = self._map[next_x, y]
-        # # square_y = self._map[x, next_y]
-
-        # x = dirx if square_x in [Map.Void, Map.Point] else 0
-        # y = diry if x == 0 else 0
-
-        # # y = diry if square_y in [Map.Void, Map.Point] else 0
-
-        # # print(x, y)
-        # # print("-----------------------")
-
-        # return x, y
-
-
+    def update_path(self, start, end):
+        path = self._finder.find_path(start, end) 
+        self._n += (self._max_dist % len(path))
+        self._path = iter(path)
+        next(self._path)
         

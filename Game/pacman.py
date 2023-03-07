@@ -15,7 +15,11 @@ class PacMan:
         self._points = 0
         self._map = map
 
-        self._die = False
+        self._is_dead = False
+
+    
+    def die(self):
+        self._is_dead = True
 
     def turn(self, x, y):
         direction = V2D(x, y)
